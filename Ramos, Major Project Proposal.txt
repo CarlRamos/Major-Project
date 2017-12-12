@@ -1,0 +1,39 @@
+Major Project proposal
+
+Carl Ramos
+
+In the major project I plan to make a 2D Real time strategy game where you have full control of your units and you can tell them to build unique buildings. I decided 
+to make an rts game because I think it would be challenging and fun to make, especially the AI. I plan to make this by finishing the skeleton of the game (buildings, selecting unit and
+making them move, collision detection, etc.) before the christmas, after that I plan to work on the break on making the units harvest and adding enemies etc. and lastly I would work on
+graphics and sounds to make the game better. 
+
+TimeLine:
+
+//////////Done before christmas break\\\\\\\\\
+	
+	basic ui	
+	buildings
+	random map(with random resources)
+	selecting unit and making it move
+	spawning units
+
+///////work on christmas break\\\\\\\	
+	
+	unit behaviour(if attacking, harvesting building)
+	collision detection
+	improve ui
+__________________________________________________________________________________________________
+
+	
+/////important aspect of the game to  call it finished\\\\
+
+	*Able to build buildings and spawn units at the player's will
+	
+	*A ui that the player can understand 
+
+//////Nice things to add\\\\\\\\
+	*Have an enemy spawn in that is able to battle with the player	
+	*animation
+	*sound
+	*map
+	*fog
