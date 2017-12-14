@@ -57,7 +57,7 @@ class MapGenerator {
 
         int x = int (random(4, cols-4));
         int y = int (random(14, rows-4));
-        println(i, x, y);
+
         if (board[x][y] == 0) {
           board[x][y] = i;
         }

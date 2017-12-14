@@ -27,7 +27,7 @@ void setup() {
   
 
   //calls function for setup
-  peopleSetup();
+ 
   resourcesSetup();
 
   theMap.initializeValues();
@@ -40,8 +40,7 @@ void draw() {
   theMap.displayMap();
   displayResource();
   displayBuildings();
-  //spawnPeople();
-  //spawnEnemy();
+ 
 }
 
 void resourcesSetup() {
@@ -54,14 +53,6 @@ void resourcesSetup() {
 
 
 
-void peopleSetup() {
-  // settings for the player's character
-  peopleX = 100;
-  peopleY = 400;
-  peopleWidth  = 10;
-  peopleHeight  = 10;
-  peopleSpeed = 1;
-}
 
 
 
@@ -90,6 +81,7 @@ void keyPressed() {
 
  if (key == '1' && wood >= 10) { 
   house.add   (new House(mouseX,mouseY)); 
+  wood -= 10;
   
 }
 }
@@ -100,4 +92,25 @@ void displayBuildings(){
   }
   
   
+}
+
+void anyHouseSelected(){
+ for(int i = 0; i < house.size(); i++){
+   House thisHouse;
+   thisHouse = house.get(i);
+   if (thisHouse.isSelected) {
+    println("house is Selected");
+  }
+   
+ }
+  
+  
+}
+
+
+
+void mouseClicked() {
+  for (House thisHouse:house) {
+    thisHouse.checkIfSelected();
+  }
 }
