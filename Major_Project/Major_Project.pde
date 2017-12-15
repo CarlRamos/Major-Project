@@ -4,6 +4,7 @@
 //globals
 MapGenerator theMap;
 ArrayList<House> house = new ArrayList<House>();
+ArrayList<Peasant> peasant = new ArrayList<Peasant>();
 
 float peopleX, peopleY, peopleWidth, peopleHeight;
 float enemyX, enemyY, enemyWidth, enemyHeight;
@@ -24,10 +25,10 @@ void setup() {
   size(800, 800);
 
   theMap = new MapGenerator();
-  
+
 
   //calls function for setup
- 
+
   resourcesSetup();
 
   theMap.initializeValues();
@@ -40,7 +41,7 @@ void draw() {
   theMap.displayMap();
   displayResource();
   displayBuildings();
- 
+  spawn();
 }
 
 void resourcesSetup() {
@@ -79,38 +80,54 @@ void displayResource() {
 //movements settings
 void keyPressed() {
 
- if (key == '1' && wood >= 10) { 
-  house.add   (new House(mouseX,mouseY)); 
-  wood -= 10;
-  
-}
+  if (key == '1' && wood >= 10) { 
+    house.add   (new House(mouseX, mouseY)); 
+    wood -= 10;
+  }
 }
 
-void displayBuildings(){
-  for(House thisHouse:house){
-    thisHouse.build();  
+
+void displayBuildings() {
+  for (House thisHouse : house) {
+    thisHouse.build();
   }
-  
-  
 }
 
-void anyHouseSelected(){
- for(int i = 0; i < house.size(); i++){
-   House thisHouse;
-   thisHouse = house.get(i);
-   if (thisHouse.isSelected) {
-    println("house is Selected");
+
+void keyReleased() {
+  for (int i = 0; i < house.size(); i++) {
+    House thisHouse;
+    thisHouse = house.get(i);
+
+    if (thisHouse.isSelected && key== 'p') {
+      int thisHouseX, thisHouseY;
+      thisHouseX = thisHouse.x;
+      thisHouseY = thisHouse.y;
+      peasant.add(new Peasant(thisHouseX, thisHouseY));
+    }
   }
+}
+
+void spawn() {
+
+  for (Peasant thisPeasant : peasant) {
+    thisPeasant.spawn();
    
- }
-  
-  
-}
-
-
-
-void mouseClicked() {
-  for (House thisHouse:house) {
-    thisHouse.checkIfSelected();
   }
-}
+
+  void mouseClicked() {
+   if (mouseButton == LEFT){
+    int toX, toY;
+    toX = mouseX;
+    toY = mouseY;
+     
+ }
+    
+    for (House thisHouse : house) {
+      thisHouse.checkIfSelected();
+    }
+
+    for (Peasant thisPeasant : peasant) {
+      thisPeasant.checkIfSelected();
+    }
+  }
