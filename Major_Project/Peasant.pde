@@ -15,12 +15,13 @@ class Peasant {
 
 
 
-
+  //spawns the peasant
   void spawn() {
-    if (isSelected){
-     fill(255); 
+    if (isSelected) {
+      fill(255); 
+      println("selected");
     }
-    ellipse(x, y, radius, radius);
+    rect(x, y, radius, radius);
   }
 
   void checkIfSelected() {
@@ -29,10 +30,30 @@ class Peasant {
     }
   }
 
-  void move(int toX, int toY) {
-    if (isSelected) {
-      x = toX;
-      y = toY;
+  void move() {
+    int toX, toY;
+
+    //teleports to the next point (from point 1 - point 2)
+    if (isSelected && mouseButton == RIGHT) {
+      toX = mouseX;
+      toY = mouseY;
+
+      if (x < toX) {
+        x += 5;
+      }
+      
+       if (x > toX) {
+        x -= 5;
+      }
+      
+       if (y < toY) {
+        y += 5;
+      }
+      
+       if (y > toY) {
+        y -= 5;
+      }
+
       println("moving");
     }
   }

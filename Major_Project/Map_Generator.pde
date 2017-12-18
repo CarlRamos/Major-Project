@@ -52,7 +52,7 @@ class MapGenerator {
   void generateMap() {
     for (int i = 1; i<resources.length; i++) {
 
-      int patches = int (random(10, 20));
+      int patches = int (random(10, 50));
       for (int q = 0; q < patches; q++) {
 
         int x = int (random(4, cols-4));

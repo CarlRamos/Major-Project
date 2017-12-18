@@ -37,6 +37,7 @@ class House {
     }
   }
 
+  //asks if the mouse is on top of the house 
   boolean mouseIsOnButton() {
     return ((mouseX > x) &&
       (mouseX < x+theWidth) &&
