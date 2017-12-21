@@ -5,6 +5,7 @@
 MapGenerator theMap;
 ArrayList<House> house = new ArrayList<House>();
 ArrayList<Peasant> peasant = new ArrayList<Peasant>();
+ArrayList<Selector> rectSelector = new ArrayList<Selector>();
 
 int [] resources = new int[4];
 
@@ -14,6 +15,10 @@ int food;
 int rock;
 
 
+
+color fillbox;
+
+int pointX, pointY, point1Y, point1X;
 
 void setup() {
 
@@ -40,6 +45,7 @@ void draw() {
   spawn();
   move();
 }
+
 
 void resourcesSetup() {
   //resources setup and starting points
@@ -109,7 +115,7 @@ void keyReleased() {
 
 //function that will spawn every unit in game
 void spawn() {
-//spawns peasant
+  //spawns peasant
   for (Peasant thisPeasant : peasant) {
     thisPeasant.spawn();
   }
@@ -117,26 +123,37 @@ void spawn() {
 
 //funtion that will make every unit move
 void move() {
-  
-    
+
   //peasant calls moves if they are selected
   for (Peasant thisPeasant : peasant) {
     thisPeasant.move( );
   }
+} 
+
+
+
+void mousePressed() {
+  rectSelector.add(new Selector());
+  
+
+
+
+  if (mouseButton == RIGHT) {
+
+    //check if the house is selected or not
+    for (House thisHouse : house) {
+      thisHouse.checkIfSelected();
+    }
+
+    //checks if the peasant is selected or not
+    for (Peasant thisPeasant : peasant) {
+      thisPeasant.checkIfSelected();
+    }
+  }
 }
 
-
-
-void mouseClicked() {
-  if (mouseButton == LEFT) {
-  }
-  //check if the house is selected or not
-  for (House thisHouse : house) {
-    thisHouse.checkIfSelected();
-  }
-
-  //checks if the peasant is selected or not
-  for (Peasant thisPeasant : peasant) {
-    thisPeasant.checkIfSelected();
-  }
+void mouseReleased() {
+ Selector tempSelector = rectSelect.get(0);
+  
+  
 }

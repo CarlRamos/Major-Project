@@ -30,27 +30,28 @@ class Peasant {
     }
   }
 
-  void move() {
-    int toX, toY;
+  void move( ) {
+    int toX, toY;  //
+    toX = mouseX;
+    toY = mouseY;
 
     //teleports to the next point (from point 1 - point 2)
-    if (isSelected && mouseButton == RIGHT) {
-      toX = mouseX;
-      toY = mouseY;
+    if (isSelected && mouseButton == LEFT) {
+
 
       if (x < toX) {
         x += 5;
       }
-      
-       if (x > toX) {
+
+      if (x > toX) {
         x -= 5;
       }
-      
-       if (y < toY) {
+
+      if (y < toY) {
         y += 5;
       }
-      
-       if (y > toY) {
+
+      if (y > toY) {
         y -= 5;
       }
 
