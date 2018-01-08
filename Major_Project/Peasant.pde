@@ -2,7 +2,7 @@ class Peasant {
 
   //data
   int hp;
-  int x, y, radius;
+  int x, y, theWidht, theHeight;
   boolean isSelected;
 
 
@@ -10,7 +10,8 @@ class Peasant {
   Peasant(int _x, int _y) {
     x = _x;
     y = _y;
-    radius = 10;
+    theWidht = 10;
+    theHeight = 10;
   }
 
 
@@ -21,7 +22,7 @@ class Peasant {
       fill(255); 
       println("selected");
     }
-    rect(x, y, radius, radius);
+    rect(x, y, theWidht, theHeight);
   }
 
   void checkIfSelected() {
@@ -32,9 +33,11 @@ class Peasant {
 
   void move( ) {
     int toX, toY;  //
+    if (mousePressed == true){
     toX = mouseX;
     toY = mouseY;
-
+    }
+    
     //teleports to the next point (from point 1 - point 2)
     if (isSelected && mouseButton == LEFT) {
 
@@ -65,5 +68,22 @@ class Peasant {
       (mouseX < x+10) &&
       (mouseY > y) &&
       (mouseY < y+10));
+  }
+ 
+  int x() {
+    return x;
+  }
+
+  int y() {
+    return y;
+  }
+
+  int Width() {
+    return theWidht ;
+  }
+
+  int Height() {
+    return theHeight;
+    
   }
 }

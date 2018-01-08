@@ -3,29 +3,48 @@ class Selector {
   int y, x, theWidth, theHeight;
 
 
-
+  int pointX, pointY;
 
   //constructor
 
   Selector() {
 
     if (mouseButton == LEFT) {
-      pointX = mouseX;
-      pointY = mouseY;
+      x = mouseX;
+      y = mouseY;
       println("w" + pointX, pointY);
       println("q" + mouseY, mouseX);
     }
   }
-}
 
 
 
-void drawRectangle() {
 
-  if (mouseButton == LEFT) {
+  void drawRectangle() {
 
-    point1X = -1 *(pointX - mouseX);
-    point1Y = -1 *(pointY - mouseY);
-    fill(0, 0, 0, 0);
-    rect(pointX, pointY, point1X, point1Y);
+    if (mouseButton == LEFT) {
+
+      pointX = -1 *(x - mouseX);
+      pointY = -1 *(y - mouseY);
+      fill(0, 0, 0, 0);
+      rect(x, y, pointX, pointY);
+    }
+   
   }
+
+  int x() {
+    return x;
+  }
+  
+  int y() {
+    return y;
+  }
+  
+  int Width() {
+    return pointX;
+  }
+ 
+  int Height() {
+    return pointY;
+  }
+}

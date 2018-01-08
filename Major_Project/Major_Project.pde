@@ -18,7 +18,7 @@ int rock;
 
 color fillbox;
 
-int pointX, pointY, point1Y, point1X;
+int toX, toY;
 
 void setup() {
 
@@ -44,6 +44,13 @@ void draw() {
   displayBuildings();
   spawn();
   move();
+
+
+
+  if (mousePressed == true) {
+    Selector tempSelector = rectSelector.get(0);
+    tempSelector.drawRectangle();
+  }
 }
 
 
@@ -134,11 +141,12 @@ void move() {
 
 void mousePressed() {
   rectSelector.add(new Selector());
-  
 
+ 
 
 
   if (mouseButton == RIGHT) {
+
 
     //check if the house is selected or not
     for (House thisHouse : house) {
@@ -153,7 +161,23 @@ void mousePressed() {
 }
 
 void mouseReleased() {
- Selector tempSelector = rectSelect.get(0);
-  
-  
+
+
+
+
+  for (int i = 0; i<peasant.size(); i++) {
+    Selector tempSelector = rectSelector.get(0);
+    Peasant thisPeasant = peasant.get(i);
+    if (thisPeasant.x ()>=tempSelector.x &&
+      thisPeasant.x<=tempSelector.x + tempSelector.Width()&&
+      thisPeasant.y<=tempSelector.y+ tempSelector.Height()&&
+      thisPeasant.y>=tempSelector.y) {
+      Peasant tempPeasant = peasant.get(i);
+      tempPeasant.isSelected =!  tempPeasant.isSelected;
+    }
+  }
+
+
+  rectSelector.remove(0);
+  //tempSelector.delete();
 }
