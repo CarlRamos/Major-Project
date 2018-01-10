@@ -44,6 +44,7 @@ void draw() {
   displayBuildings();
   spawn();
   move();
+  println(toX, toY);
 
 
 
@@ -133,17 +134,12 @@ void move() {
 
   //peasant calls moves if they are selected
   for (Peasant thisPeasant : peasant) {
-    thisPeasant.move( );
+    thisPeasant.move(toX, toY );
   }
 } 
 
-
-
 void mousePressed() {
   rectSelector.add(new Selector());
-
- 
-
 
   if (mouseButton == RIGHT) {
 
@@ -162,16 +158,18 @@ void mousePressed() {
 
 void mouseReleased() {
 
-
-
-
   for (int i = 0; i<peasant.size(); i++) {
     Selector tempSelector = rectSelector.get(0);
     Peasant thisPeasant = peasant.get(i);
-    if (thisPeasant.x ()>=tempSelector.x &&
+    if ((thisPeasant.x ()<=tempSelector.x &&
+      thisPeasant.x>=tempSelector.x + tempSelector.Width()&&
+      thisPeasant.y>=tempSelector.y+  tempSelector.Height()&&
+      thisPeasant.y<=tempSelector.y) ||
+      
+      (thisPeasant.x ()>=tempSelector.x &&
       thisPeasant.x<=tempSelector.x + tempSelector.Width()&&
-      thisPeasant.y<=tempSelector.y+ tempSelector.Height()&&
-      thisPeasant.y>=tempSelector.y) {
+      thisPeasant.y<=tempSelector.y+  tempSelector.Height()&&
+      thisPeasant.y>=tempSelector.y)) {
       Peasant tempPeasant = peasant.get(i);
       tempPeasant.isSelected =!  tempPeasant.isSelected;
     }
@@ -180,4 +178,11 @@ void mouseReleased() {
 
   rectSelector.remove(0);
   //tempSelector.delete();
+}
+
+
+
+void mouseClicked() {
+  toX= mouseX;
+  toY= mouseY;
 }

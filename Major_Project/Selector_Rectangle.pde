@@ -26,8 +26,9 @@ class Selector {
 
       pointX = -1 *(x - mouseX);
       pointY = -1 *(y - mouseY);
-      fill(0, 0, 0, 0);
+      fill(0, 0, 255, 100);
       rect(x, y, pointX, pointY);
+      println(pointX, pointY);
     }
    
   }

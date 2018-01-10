@@ -4,7 +4,7 @@ class Peasant {
   int hp;
   int x, y, theWidht, theHeight;
   boolean isSelected;
-
+   //int goX, goY;
 
   //  
   Peasant(int _x, int _y) {
@@ -20,7 +20,7 @@ class Peasant {
   void spawn() {
     if (isSelected) {
       fill(255); 
-      println("selected");
+      //println("selected");
     }
     rect(x, y, theWidht, theHeight);
   }
@@ -31,30 +31,27 @@ class Peasant {
     }
   }
 
-  void move( ) {
-    int toX, toY;  //
-    if (mousePressed == true){
-    toX = mouseX;
-    toY = mouseY;
-    }
+  void move(int  goX, int goY) {
+  
+   
     
     //teleports to the next point (from point 1 - point 2)
     if (isSelected && mouseButton == LEFT) {
 
 
-      if (x < toX) {
+      if (x < goX) {
         x += 5;
       }
 
-      if (x > toX) {
+      if (x > goX) {
         x -= 5;
       }
 
-      if (y < toY) {
+      if (y < goY) {
         y += 5;
       }
 
-      if (y > toY) {
+      if (y > goY) {
         y -= 5;
       }
 
