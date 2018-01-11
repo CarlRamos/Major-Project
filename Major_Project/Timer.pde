@@ -1,24 +1,31 @@
-class Timer{
-  float startTime,elapseTime, endTime; 
+// Schellenberg
+//get it form the class example
+class Timer {
+  // data
+  int startTime, timeToWait, endTime;
   
-  Timer(int _elapseTime){
-    elapseTime=_elapseTime;
+  // constructor
+  Timer(int _timeToWait) {
+    timeToWait = _timeToWait;
   }
   
-  void activate(){
-    startTime=millis();
-    endTime= startTime+elapseTime;
-    
+  // behaviour
+  void begin() {
+    startTime = millis();
+    endTime = startTime + timeToWait;
   }
   
-  boolean done(){
-    if (millis()>=endTime){
+  boolean isFinished() {
+    if (millis() >= endTime) {
       return true;
     }
-    return false;
-  
+    else {
+      return false;
+    }
   }
-  void waitTime(int _elapseTime){
-    elapseTime = _elapseTime; 
-  }   
+  
+  void setWaitTime(int _timeToWait) {
+    timeToWait = _timeToWait;
+  }
+  
 }

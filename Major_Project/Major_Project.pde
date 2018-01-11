@@ -6,6 +6,7 @@ MapGenerator theMap;
 ArrayList<House> house = new ArrayList<House>();
 ArrayList<Peasant> peasant = new ArrayList<Peasant>();
 ArrayList<Selector> rectSelector = new ArrayList<Selector>();
+ArrayList<Timer> peasantSpawnTimer = new ArrayList<Timer>();
 
 int [] resources = new int[4];
 
@@ -14,7 +15,7 @@ int wood;
 int food;
 int rock;
 
-
+Timer clock;
 
 color fillbox;
 
@@ -24,6 +25,7 @@ void setup() {
 
   // Screen size
   size(800, 800);
+
 
   theMap = new MapGenerator();
 
@@ -44,8 +46,10 @@ void draw() {
   displayBuildings();
   spawn();
   move();
-  println(toX, toY);
 
+println(peasantSpawnTimer.size());
+Timer temp = peasantSpawnTimer.get(peasantSpawnTimer.size());
+println(temp.endTime, millis());
 
 
   if (mousePressed == true) {
@@ -93,6 +97,8 @@ void keyPressed() {
 
   if (key == '1' && wood >= 10) { 
     house.add   (new House(mouseX, mouseY)); 
+    peasantSpawnTimer.add(new Timer(3000));
+    
     wood -= 10;
   }
 }
@@ -108,22 +114,31 @@ void displayBuildings() {
 
 void keyReleased() {
   //for spawning a peasant on which current house is selected
-  for (int i = 0; i < house.size(); i++) {
-    House thisHouse;
-    thisHouse = house.get(i);
-
-    if (thisHouse.isSelected && key== 'p') {
-      int thisHouseX, thisHouseY;
-      thisHouseX = thisHouse.x;
-      thisHouseY = thisHouse.y;
-      peasant.add(new Peasant(thisHouseX, thisHouseY));
-    }
-  }
 }
 
 //function that will spawn every unit in game
 void spawn() {
   //spawns peasant
+  for(Timer allPeasantTimer: peasantSpawnTimer){
+     allPeasantTimer.begin(); 
+  }
+  
+  for (int i =0; i < house.size(); i++) {
+    House thisHouse =  house.get(i);
+    Timer thisPeasantTimer = peasantSpawnTimer.get(i);
+
+
+    if (thisPeasantTimer.isFinished()) {
+      int thisHouseX, thisHouseY;
+      thisHouseX = thisHouse.x;
+      thisHouseY = thisHouse.y;
+      peasant.add(new Peasant(thisHouseX, thisHouseY));
+      thisPeasantTimer.setWaitTime(3000);
+      //thisPeasantTimer.begin();
+      
+    }
+  }
+
   for (Peasant thisPeasant : peasant) {
     thisPeasant.spawn();
   }
@@ -165,7 +180,7 @@ void mouseReleased() {
       thisPeasant.x>=tempSelector.x + tempSelector.Width()&&
       thisPeasant.y>=tempSelector.y+  tempSelector.Height()&&
       thisPeasant.y<=tempSelector.y) ||
-      
+
       (thisPeasant.x ()>=tempSelector.x &&
       thisPeasant.x<=tempSelector.x + tempSelector.Width()&&
       thisPeasant.y<=tempSelector.y+  tempSelector.Height()&&
