@@ -4,7 +4,7 @@ class Peasant {
   int hp;
   int x, y, theWidht, theHeight;
   boolean isSelected;
-   //int goX, goY;
+  //int goX, goY;
 
   //  
   Peasant(int _x, int _y) {
@@ -32,9 +32,9 @@ class Peasant {
   }
 
   void move(int  goX, int goY) {
-  
-   
-    
+
+
+
     //teleports to the next point (from point 1 - point 2)
     if (isSelected && mouseButton == LEFT) {
 
@@ -66,7 +66,7 @@ class Peasant {
       (mouseY > y) &&
       (mouseY < y+10));
   }
- 
+
   int x() {
     return x;
   }
@@ -81,6 +81,5 @@ class Peasant {
 
   int Height() {
     return theHeight;
-    
   }
 }

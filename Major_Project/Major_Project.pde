@@ -47,9 +47,9 @@ void draw() {
   spawn();
   move();
 
-println(peasantSpawnTimer.size());
-Timer temp = peasantSpawnTimer.get(peasantSpawnTimer.size());
-println(temp.endTime, millis());
+  println(peasantSpawnTimer.size());
+
+
 
 
   if (mousePressed == true) {
@@ -98,7 +98,9 @@ void keyPressed() {
   if (key == '1' && wood >= 10) { 
     house.add   (new House(mouseX, mouseY)); 
     peasantSpawnTimer.add(new Timer(3000));
-    
+    Timer thisPeasantTimer = peasantSpawnTimer.get(peasantSpawnTimer.size()-1);
+    thisPeasantTimer.begin();
+
     wood -= 10;
   }
 }
@@ -119,23 +121,22 @@ void keyReleased() {
 //function that will spawn every unit in game
 void spawn() {
   //spawns peasant
-  for(Timer allPeasantTimer: peasantSpawnTimer){
-     allPeasantTimer.begin(); 
-  }
-  
+
+
   for (int i =0; i < house.size(); i++) {
     House thisHouse =  house.get(i);
-    Timer thisPeasantTimer = peasantSpawnTimer.get(i);
 
+    Timer  thisPeasantTimer = peasantSpawnTimer.get(i);
 
     if (thisPeasantTimer.isFinished()) {
       int thisHouseX, thisHouseY;
       thisHouseX = thisHouse.x;
       thisHouseY = thisHouse.y;
+      println("Hell Yeah!");
       peasant.add(new Peasant(thisHouseX, thisHouseY));
       thisPeasantTimer.setWaitTime(3000);
-      //thisPeasantTimer.begin();
-      
+
+      thisPeasantTimer.begin();
     }
   }
 
@@ -144,7 +145,7 @@ void spawn() {
   }
 }
 
-//funtion that will make every unit move
+//function that will make every unit move
 void move() {
 
   //peasant calls moves if they are selected
