@@ -64,4 +64,34 @@ class MapGenerator {
       }
     }
   }
+
+
+int cols(){
+ return cols; 
+  
+  
+}
+
+int row(){
+ return rows; 
+  
+  
+}
+
+int x(){
+ return cols; 
+  
+  
+}
+
+int y(){
+ return cols; 
+  
+  
+}
+
+
+
+
+
 }

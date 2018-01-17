@@ -8,7 +8,12 @@ ArrayList<Peasant> peasant = new ArrayList<Peasant>();
 ArrayList<Selector> rectSelector = new ArrayList<Selector>();
 ArrayList<Timer> peasantSpawnTimer = new ArrayList<Timer>();
 
+int [] toX, toY;
+
 int [] resources = new int[4];
+int counter;
+
+
 
 int water;
 int wood;
@@ -19,13 +24,16 @@ Timer clock;
 
 color fillbox;
 
-int toX, toY;
+
 
 void setup() {
 
   // Screen size
   size(800, 800);
+  counter = 1;
 
+  toX = new int[99999];
+  toY = new int[99999];
 
   theMap = new MapGenerator();
 
@@ -46,6 +54,7 @@ void draw() {
   displayBuildings();
   spawn();
   move();
+  colisionDetection();
 
   println(peasantSpawnTimer.size());
 
@@ -134,7 +143,7 @@ void spawn() {
       thisHouseY = thisHouse.y;
       println("Hell Yeah!");
       peasant.add(new Peasant(thisHouseX, thisHouseY));
-      thisPeasantTimer.setWaitTime(3000);
+      thisPeasantTimer.setWaitTime(30000);
 
       thisPeasantTimer.begin();
     }
@@ -149,15 +158,31 @@ void spawn() {
 void move() {
 
   //peasant calls moves if they are selected
-  for (Peasant thisPeasant : peasant) {
-    thisPeasant.move(toX, toY );
-  }
-} 
 
+  int theX, theY;
+  theX =  toX[counter];
+  theY =  toY[counter];
+
+  println("count" +counter);
+
+  for (int i= 0; i < peasant.size(); i++) {
+    Peasant thisPeasant = peasant.get(i);
+    if (thisPeasant.isSelected) {
+      thisPeasant.move(theX, theY );
+    } else if (thisPeasant.isSelected==false) {
+      thisPeasant.move(thisPeasant.x, thisPeasant.y);
+    }
+  }
+}
 void mousePressed() {
   rectSelector.add(new Selector());
 
   if (mouseButton == RIGHT) {
+    counter +=1;
+    toX[counter]=mouseX;
+    toY[counter]=mouseY;
+  }
+  if (mouseButton == LEFT) {
 
 
     //check if the house is selected or not
@@ -167,6 +192,8 @@ void mousePressed() {
 
     //checks if the peasant is selected or not
     for (Peasant thisPeasant : peasant) {
+      thisPeasant.isSelected = false;
+
       thisPeasant.checkIfSelected();
     }
   }
@@ -192,13 +219,93 @@ void mouseReleased() {
   }
 
 
+
+
+
+
   rectSelector.remove(0);
   //tempSelector.delete();
 }
 
+void colisionDetection() {
 
+  for (Peasant thisPeasant : peasant) { 
+    for (int x = 0; x < theMap.cols; x++) {
+      for (int y = 10; y <theMap.rows; y++) {
 
-void mouseClicked() {
-  toX= mouseX;
-  toY= mouseY;
+        if (((x*theMap.cellWidth) + theMap.cellWidth >= mouseX) &&  
+          ((x*theMap.cellWidth)   <= mouseX) &&  
+          ((y*theMap.cellHeight) + theMap.cellHeight >= mouseY) &&    
+          ((y*theMap.cellHeight) <= mouseY) && (theMap.board[x][y] >=1)&&(thisPeasant.isSelected)&&(mouseButton == LEFT )) {
+          println("Yay");
+        }
+        //check if a 
+
+        if (((x*theMap.cellWidth) + theMap.cellWidth >= thisPeasant.x()) &&  
+          ((x*theMap.cellWidth)   <= thisPeasant.x + thisPeasant.Width()) &&  
+          ((y*theMap.cellHeight) + theMap.cellHeight >= thisPeasant.y()) &&    
+          ((y*theMap.cellHeight) <= thisPeasant.y + thisPeasant.Height()) && (theMap.board[x][y] ==1)) {    
+          if (frameCount % 120 == 0) {
+            thisPeasant.carryRock =+ 10;
+          }
+        }
+
+        //
+        if (((x*theMap.cellWidth) + theMap.cellWidth >= thisPeasant.x()) &&  
+          ((x*theMap.cellWidth)   <= thisPeasant.x + thisPeasant.Width()) &&  
+          ((y*theMap.cellHeight) + theMap.cellHeight >= thisPeasant.y()) &&    
+          ((y*theMap.cellHeight) <= thisPeasant.y + thisPeasant.Height()) && (theMap.board[x][y] ==2)) {    
+          if (frameCount % 120 == 0) {
+            water += 10;
+          }
+        }
+        //
+        if (((x*theMap.cellWidth) + theMap.cellWidth >= thisPeasant.x()) &&  
+          ((x*theMap.cellWidth)   <= thisPeasant.x + thisPeasant.Width()) &&  
+          ((y*theMap.cellHeight) + theMap.cellHeight >= thisPeasant.y()) &&    
+          ((y*theMap.cellHeight) <= thisPeasant.y + thisPeasant.Height()) && (theMap.board[x][y] ==3)) {    
+          if (frameCount % 120 == 0) {
+            wood += 10;
+          }
+        }
+
+        //
+        if (((x*theMap.cellWidth) + theMap.cellWidth >= thisPeasant.x()) &&  
+          ((x*theMap.cellWidth)   <= thisPeasant.x + thisPeasant.Width()) &&  
+          ((y*theMap.cellHeight) + theMap.cellHeight >= thisPeasant.y()) &&    
+          ((y*theMap.cellHeight) <= thisPeasant.y + thisPeasant.Height()) && (theMap.board[x][y] ==3)) {    
+          if (frameCount % 120 == 0) {
+            food += 10;
+          }
+        }
+      }
+    }
+  }
+
+  for (int i=0; i<peasant.size(); i++) {
+    for (int j=0; j<peasant.size(); j++) {
+
+      Peasant currentPeasant = peasant.get(i);
+      Peasant otherPeasant = peasant.get(j);
+      
+      if ((currentPeasant.x +  currentPeasant.theWidht > otherPeasant.x)&&
+
+        (currentPeasant.x   < otherPeasant.x + otherPeasant.Width()) &&
+
+        (currentPeasant.y  < otherPeasant.y + otherPeasant.Height()) &&
+
+        (currentPeasant.y + currentPeasant.theHeight > otherPeasant.y()) &&  i != j) {
+        println(" OverLapping");
+      }  
+      if ((currentPeasant.x +  currentPeasant.theWidht == otherPeasant.x)&&
+
+        (currentPeasant.x   == otherPeasant.x + otherPeasant.Width()) &&
+
+        (currentPeasant.y  == otherPeasant.y + otherPeasant.Height()) &&
+
+        (currentPeasant.y + currentPeasant.theHeight == otherPeasant.y())) {
+        println("not OverLapping");
+      }
+    }
+  }
 }

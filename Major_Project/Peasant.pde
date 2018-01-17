@@ -4,14 +4,23 @@ class Peasant {
   int hp;
   int x, y, theWidht, theHeight;
   boolean isSelected;
+  int carryRock, carryWood, carryFood, carryWater;
   //int goX, goY;
-
+  boolean isHarvesting;
+  int carryWeight;
+  int speed;
   //  
   Peasant(int _x, int _y) {
     x = _x;
     y = _y;
     theWidht = 10;
     theHeight = 10;
+    carryRock= 0;
+    carryWood= 0;
+    carryFood= 0;
+    carryWater= 0;
+    isHarvesting = false;
+    speed = 1;
   }
 
 
@@ -36,27 +45,28 @@ class Peasant {
 
 
     //teleports to the next point (from point 1 - point 2)
-    if (isSelected && mouseButton == LEFT) {
+    
 
 
       if (x < goX) {
-        x += 5;
+        x += speed;
       }
 
       if (x > goX) {
-        x -= 5;
+        x -= speed;
       }
 
       if (y < goY) {
-        y += 5;
+        y +=speed;
       }
 
       if (y > goY) {
-        y -= 5;
+        y -= speed;
       }
+      else 
 
       println("moving");
-    }
+    
   }
 
 
@@ -66,6 +76,21 @@ class Peasant {
       (mouseY > y) &&
       (mouseY < y+10));
   }
+
+  void Harvest(){
+   if( carryRock == carryWeight || carryWood == carryWeight || carryWood == carryWater || carryFood == carryWeight ){
+     
+     
+     
+   }
+    
+    
+  }
+
+
+
+
+
 
   int x() {
     return x;
@@ -82,4 +107,23 @@ class Peasant {
   int Height() {
     return theHeight;
   }
+
+  //void dontOverLap(Peasant otherPeasant) {
+  //  if (x +  theWidht >= otherPeasant.x) {
+  //    print("colliding L");
+  //  } else if  (x   <= otherPeasant.x + otherPeasant.Width()) {
+  //    print("colliding R");
+      
+  //  } else if (y + theHeight <= otherPeasant.y()) {
+  //    print("colliding N");
+      
+  //  } else if (y  >= otherPeasant.y + otherPeasant.Height()) {
+  //    print("colliding S");
+      
+  //  }
+  //  else{
+  //   println("not OverLapping"); 
+  //  }
+    
+  //}
 }
