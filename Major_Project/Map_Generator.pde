@@ -5,7 +5,7 @@ class MapGenerator {
   int cols, rows;
   float cellWidth, cellHeight;
 
-
+int [] resources = new int[4];
 
   //constructor
   MapGenerator() {

@@ -30,22 +30,27 @@ class Selector {
       rect(x, y, pointX, pointY);
       println(pointX, pointY);
     }
-   
   }
+  
+  boolean checkIfInside(float theX, float theY) {
+    return(theX <= x &&
+      theX>=x + pointX&&
+      theY>=y+ pointY&&
+      theY<= y) ||
 
-  int x() {
-    return x;
-  }
-  
-  int y() {
-    return y;
-  }
-  
-  int Width() {
-    return pointX;
-  }
- 
-  int Height() {
-    return pointY;
+      (theX >= x &&
+      theX<= x + pointX&&
+      theY<= y+  pointY&&
+      theY>= y) ||
+
+      (theX >= x &&
+      theX<= x +  pointX&&
+      theY>= y+   pointY&&
+      theY<= y) ||
+
+      (theX <= x &&
+      theX>= x + pointX&&
+      theY<= y+ pointY&&
+      theY>= y);
   }
 }
