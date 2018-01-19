@@ -87,13 +87,7 @@ void setup() {
 
 void draw() {
   // calling out all the functions
-  background(0);
-  theMap.displayMap();
-  displayResource();
-  displayBuildings();
-  spawn();
-  move();
-  harvest();
+  gameSetup();
 
 
 
@@ -101,6 +95,17 @@ void draw() {
     Selector tempSelector = rectSelector.get(0);
     tempSelector.drawRectangle();
   }
+}
+
+void gameSetup() {
+// calling out all the functions
+  background(0);
+  theMap.displayMap();
+  displayResource();
+  displayBuildings();
+  spawn();
+  move();
+  harvest();
 }
 
 
@@ -295,10 +300,9 @@ void spawn() {
 
       //so if the Peasant walkthrough it without being intended to be a archer it wont be
       if (thisArhcery.mouseIsOnBuilding() && thisPeasant.isSelected) {
-       
+
         thisPeasant.training = true;
-      
-    } else {
+      } else {
         thisPeasant.training = false;
       }
 
@@ -324,6 +328,8 @@ void move() {
   //warrior calls moves if they are selected
   for (Warrior thisWarrior : warrior) {
 
+    thisWarrior.outOfBoundary();
+
     if (thisWarrior.isSelected) {
       thisWarrior.move(toX, toY);
     }
@@ -332,6 +338,8 @@ void move() {
   //makes every archer move if they are selected
 
   for (Archer thisArcher : archer) {
+
+    thisArcher.outOfBoundary(); 
 
     if (thisArcher.isSelected) {
       thisArcher.move(toX, toY);
@@ -342,7 +350,10 @@ void move() {
 
   //makes every Peasant move if they are selected
   for (int j=0; j<peasant.size(); j++) {
+
     Peasant thisPeasant = peasant.get(j);
+
+    thisPeasant.outOfBoundary(); 
 
     if (thisPeasant.isSelected) {
       thisPeasant.move( toX, toY);
@@ -438,6 +449,13 @@ void mouseReleased() {
 
 
 
+
+
+
+
+
+
+
 void harvest() {
   // checks if any peasant is inside a resource tile and if so add a resource corresponding on which resource tile the peasant is standing
 
@@ -474,7 +492,7 @@ void harvest() {
         }
       }
     }
-// since farm is not a natural resource it is not in a 2d array and have a different way of detecting to harvest
+    // since farm is not a natural resource it is not in a 2d array and have a different way of detecting to harvest
     for (Farm thisFarm : farm) {
 
       if (thisFarm.isInside(thisPeasant)) {    

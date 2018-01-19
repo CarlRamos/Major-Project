@@ -70,16 +70,16 @@ class Units {
       x -= 5;
     }
 
-    if (y < width) {
+    if (x < 0) {
       x += 5;
     }
 
     if (y > height) {
-      x -= 5;
+      y -= 5;
     }
 
-    if (x < height) {
-      x += 5;
+    if (y < 150) {
+      y += 5;
     }
   }
 
