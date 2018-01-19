@@ -1,5 +1,5 @@
 // Schellenberg
-//get it form the class example
+//got it form the class example
 class Timer {
   // data
   int startTime, timeToWait, endTime;

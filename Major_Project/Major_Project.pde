@@ -1,8 +1,43 @@
+//Carl Lawrence Ramos
+//
+//In my major Project I attempted on doing an rts games 
+//
+//red = warrior
+//blue = archer
+//light color yellow = peasant
+//
+//Instructions:
+//
+//**if you press the following numbers that type of building will be built where your current mouse coords is
+//
+//1 = house
+//2 = walls
+//3 = Barracks
+//4 = Archery
+//5= farmland
+//
+//right click to move selected units
+//left click to select one units or drag left click to form a selector rectangle
+//
+//if you build a House a peasant will naturally spawn there, the first peasant will spawn at around 5 sec after build and the following peasant that will be spawned there will be 30 sec apart
+//If you want to train a Warrior you have to build a Barracks and with Archer you would have to build an Archery
+//if you want to get a certain resource make your peasant stantd inside that resource
+//You can't have two units moving at different location at the same time you would have to wait for your first unit to finish his movement before making the other unit move - since my goTo variable is global it re writes the coords of where the units is supposed to go
+//
+////////////////////////////////////////////////////////////////////////////////////////////KOWN BUGS
+//
+//can build overlapping each building and Units can move through buildings - can't figure out how to fix this one as every time i try to fix it i break my code
+//if a certain is selected they would go to the last point instead of stay still - the problem is that my goTo variable is a global variable 
+//
+//
+//
 
 
 
 //globals
 MapGenerator theMap;
+
+//all array list 
 ArrayList<Walls> walls = new ArrayList<Walls>();
 ArrayList<Barracks> barracks = new ArrayList<Barracks>();
 ArrayList<House> house = new ArrayList<House>();
@@ -12,23 +47,20 @@ ArrayList<Timer> peasantSpawnTimer = new ArrayList<Timer>();
 ArrayList<Warrior> warrior = new ArrayList<Warrior>();
 ArrayList<Archer> archer = new ArrayList<Archer>();
 ArrayList<Archery> archery = new ArrayList<Archery>();
+ArrayList<Farm> farm = new ArrayList<Farm>();
 
 int  toX, toY;
 
-
-int counter;
-
-
-
+//resource
 int water;
 int wood;
 int food;
 int rock;
 
-int forceFix =0;
+
 Timer clock;
 
-color fillbox;
+
 
 
 
@@ -38,7 +70,7 @@ void setup() {
 
   // Screen size
   size(800, 800);
-  counter = 1;
+
 
 
   theMap = new MapGenerator();
@@ -48,6 +80,7 @@ void setup() {
 
   resourcesSetup();
 
+  //initialize values for the map and generates
   theMap.initializeValues();
   theMap.generateMap();
 }
@@ -60,9 +93,8 @@ void draw() {
   displayBuildings();
   spawn();
   move();
-  colisionDetection();
+  harvest();
 
-  println(walls.size());
 
 
   if (mousePressed == true) {
@@ -101,21 +133,18 @@ void displayResource() {
 }
 
 
-void forcedFix() {
-  if (house.size()>=1) {
-    walls.add(new Walls(-11, -11)); 
-    forceFix += 1;
-  }
-}
 
 
 
 //movements settings
 void keyPressed() {
 
+  // key to build all the buildings and it would check if you have the enough resource to build the following buildings
   if (key == '1' && wood >= 10) { 
+    //timer for spawn
     house.add   (new House(mouseX, mouseY)); 
     peasantSpawnTimer.add(new Timer(3000));
+
     Timer thisPeasantTimer = peasantSpawnTimer.get(peasantSpawnTimer.size()-1);
     thisPeasantTimer.begin();
 
@@ -123,24 +152,35 @@ void keyPressed() {
   }
 
   if (key == '2' && wood >= 15) { 
+
     walls.add   (new Walls(mouseX, mouseY)); 
-
-
 
     wood -= 15;
   }
 
 
   if (key == '3' && wood >20 && rock > 25) {
+
     barracks.add(new Barracks(mouseX, mouseY));
+
     wood -= 20;
     rock -= 25;
   }
 
   if (key == '4' && wood >25 && rock > 20) {
+
     archery.add(new Archery(mouseX, mouseY));
+
     wood -= 25;
     rock -= 20;
+  }
+  if (key == '5' && wood >10 && rock > 10&& water > 15) {
+
+    farm.add(new Farm(mouseX, mouseY));
+    //resource that would be taken away if built
+    wood -= 10;
+    rock -= 10;
+    water -= 15;
   }
 }
 
@@ -164,6 +204,10 @@ void displayBuildings() {
   for (Archery thisArchery : archery) {
     thisArchery.build();
   }
+
+  for (Farm thisFarm : farm) {
+    thisFarm.build();
+  }
 }
 
 
@@ -181,12 +225,14 @@ void spawn() {
   for (int i =0; i < house.size(); i++) {
     House thisHouse =  house.get(i);
 
+    //Natural Timer for peasant to spawn
     Timer  thisPeasantTimer = peasantSpawnTimer.get(i);
 
     if (thisPeasantTimer.isFinished()) {
 
-      println("Hell Yeah!");
+
       peasant.add(new Peasant(thisHouse.x, thisHouse.y));
+      //start timer for the next spawn
       thisPeasantTimer.setWaitTime(30000);
 
       thisPeasantTimer.begin();
@@ -215,7 +261,7 @@ void spawn() {
       Peasant thisPeasant = peasant.get(j);
 
       //so if the Peasant walkthrough it without being intended to be a warrior it wont be
-      if (thisBarracks.mouseIsOnButton() && thisPeasant.isSelected) {
+      if (thisBarracks.mouseIsOnBuilding() && thisPeasant.isSelected) {
         thisPeasant.training = true;
       } else {
         thisPeasant.training = false;
@@ -224,7 +270,7 @@ void spawn() {
       // if Peasant is being intended to be a Warrior once it touched the barracks it will be removed and a warrior will spawn
       if (thisBarracks.isInside(thisPeasant)&& 
         thisPeasant.training == true) {
-          
+
         peasant.remove(j);
         warrior.add(new Warrior(thisBarracks.x, thisBarracks.y));
       }
@@ -248,9 +294,11 @@ void spawn() {
       Peasant thisPeasant = peasant.get(j);
 
       //so if the Peasant walkthrough it without being intended to be a archer it wont be
-      if (thisArhcery.mouseIsOnButton() && thisPeasant.isSelected) {
+      if (thisArhcery.mouseIsOnBuilding() && thisPeasant.isSelected) {
+       
         thisPeasant.training = true;
-      } else {
+      
+    } else {
         thisPeasant.training = false;
       }
 
@@ -259,7 +307,7 @@ void spawn() {
         thisPeasant.training == true) {
 
         peasant.remove(j);
-        warrior.add(new Warrior(thisArhcery.x, thisArhcery.y));
+        archer.add(new Archer(thisArhcery.x, thisArhcery.y));
       }
     }
   }
@@ -273,43 +321,49 @@ void spawn() {
 //function that will make every unit move
 void move() {
 
-  //peasant calls moves if they are selected
+  //warrior calls moves if they are selected
   for (Warrior thisWarrior : warrior) {
-    if (thisWarrior.isSelected) {
 
+    if (thisWarrior.isSelected) {
       thisWarrior.move(toX, toY);
     }
   }
+
+  //makes every archer move if they are selected
+
   for (Archer thisArcher : archer) {
-    thisArcher.move(toX, toY);
+
+    if (thisArcher.isSelected) {
+      thisArcher.move(toX, toY);
+    }
   }
 
 
 
-
+  //makes every Peasant move if they are selected
   for (int j=0; j<peasant.size(); j++) {
     Peasant thisPeasant = peasant.get(j);
-    thisPeasant.move( toX, toY);
+
+    if (thisPeasant.isSelected) {
+      thisPeasant.move( toX, toY);
+    }
   }
 }
+
 
 void mousePressed() {
   rectSelector.add(new Selector());
 
+  //sets the points where the selected units will go, if you disselect a unit they will stoop moving,
   if (mouseButton == RIGHT) {
-    counter +=1;
+
     toX = mouseX;
     toY = mouseY;
   }
   if (mouseButton == LEFT) {
 
 
-    //check if the house is selected or not
-    for (House thisHouse : house) {
-      thisHouse.checkIfSelected();
-    }
-
-    //checks if the peasant is selected or not
+    //checks if the peasant is selected or not by a click of mouse, and if you click into nothing with left mousebutton all you currently clicked will be disselected
     for (Peasant thisPeasant : peasant) {
 
       thisPeasant.isSelected = false;
@@ -338,6 +392,7 @@ void mousePressed() {
 void mouseReleased() {
 
   //checks if any unit is inside the Rectangle Selector
+
   //for peasants
   for (int i = 0; i<peasant.size(); i++) {
 
@@ -349,6 +404,8 @@ void mouseReleased() {
       thisPeasant.isSelected =!  thisPeasant.isSelected;
     }
   }
+
+  //for Warrior
   for (int i = 0; i<warrior.size(); i++) {
 
     Selector tempSelector = rectSelector.get(0);
@@ -360,7 +417,17 @@ void mouseReleased() {
     }
   }
 
+  //For archer
+  for (int i = 0; i<archer.size(); i++) {
 
+    Selector tempSelector = rectSelector.get(0);
+    Archer thisArcher = archer.get(i);
+
+    if (tempSelector.checkIfInside(thisArcher.x, thisArcher.y)) {
+
+      thisArcher.isSelected =!  thisArcher.isSelected;
+    }
+  }
 
 
 
@@ -371,71 +438,50 @@ void mouseReleased() {
 
 
 
-void colisionDetection() {
+void harvest() {
+  // checks if any peasant is inside a resource tile and if so add a resource corresponding on which resource tile the peasant is standing
 
   for (Peasant thisPeasant : peasant) { 
+
     for (int x = 0; x < theMap.cols; x++) {
       for (int y = 10; y <theMap.rows; y++) {
 
-        if (((x*theMap.cellWidth) + theMap.cellWidth >= mouseX) &&  
-          ((x*theMap.cellWidth)   <= mouseX) &&  
-          ((y*theMap.cellHeight) + theMap.cellHeight >= mouseY) &&    
-          ((y*theMap.cellHeight) <= mouseY) && (theMap.board[x][y] >=1)&&(thisPeasant.isSelected)&&(mouseButton == LEFT )) {
-          println("Yay");
-        }
-        //check if a 
+        int   cellX = int((x*theMap.cellWidth));
+        int   cellY = int((y*theMap.cellHeight));
 
-        if (((x*theMap.cellWidth) + theMap.cellWidth >= thisPeasant.x) &&  
-          ((x*theMap.cellWidth)   <= thisPeasant.x + thisPeasant.theWidht) &&  
-          ((y*theMap.cellHeight) + theMap.cellHeight >= thisPeasant.y) &&    
-          ((y*theMap.cellHeight) <= thisPeasant.y + thisPeasant.theHeight) && (theMap.board[x][y] ==1)) {    
+
+        if (thisPeasant.isPeasantInResource(cellX, cellY, int (theMap.cellWidth), int (theMap.cellHeight)) && (theMap.board[x][y] ==1)) {    
+          //time between each harvest
           if (frameCount % 120 == 0) {
-            thisPeasant.carryRock =+ 10;
+            rock += 10;
           }
         }
 
         //
-        if (((x*theMap.cellWidth) + theMap.cellWidth >= thisPeasant.x) &&  
-          ((x*theMap.cellWidth)   <= thisPeasant.x + thisPeasant.theWidht) &&  
-          ((y*theMap.cellHeight) + theMap.cellHeight >= thisPeasant.y) &&    
-          ((y*theMap.cellHeight) <= thisPeasant.y + thisPeasant.theHeight) && (theMap.board[x][y] ==2)) {    
+        if (thisPeasant.isPeasantInResource(cellX, cellY, int (theMap.cellWidth), int (theMap.cellHeight)) && (theMap.board[x][y] ==2)) {    
+          //time between each harvest
           if (frameCount % 120 == 0) {
             water += 10;
           }
         }
         //
-        if (((x*theMap.cellWidth) + theMap.cellWidth >= thisPeasant.x) &&  
-          ((x*theMap.cellWidth)   <= thisPeasant.x + thisPeasant.theWidht) &&  
-          ((y*theMap.cellHeight) + theMap.cellHeight >= thisPeasant.y) &&    
-          ((y*theMap.cellHeight) <= thisPeasant.y + thisPeasant.theHeight) && (theMap.board[x][y] ==3)) {    
+
+        if (thisPeasant.isPeasantInResource(cellX, cellY, int (theMap.cellWidth), int (theMap.cellHeight)) && (theMap.board[x][y] ==3)) {    
+          //time between each harvest
           if (frameCount % 120 == 0) {
             wood += 10;
           }
         }
-
-        //
-        if (((x*theMap.cellWidth) + theMap.cellWidth >= thisPeasant.x) &&  
-          ((x*theMap.cellWidth)   <= thisPeasant.x + thisPeasant.theWidht) &&  
-          ((y*theMap.cellHeight) + theMap.cellHeight >= thisPeasant.y) &&    
-          ((y*theMap.cellHeight) <= thisPeasant.y + thisPeasant.theHeight) && (theMap.board[x][y] ==3)) {    
-          if (frameCount % 120 == 0) {
-            food += 10;
-          }
-        }
       }
     }
-  }
+// since farm is not a natural resource it is not in a 2d array and have a different way of detecting to harvest
+    for (Farm thisFarm : farm) {
 
-
-  for (int j=0; j<peasant.size(); j++) {
-    for (int i = 0; i < walls.size(); i++) {
-      Walls thisWall = walls.get(i);
-      Peasant thisPeasant = peasant.get(j);
-      if (thisPeasant.x + thisPeasant.theWidht > thisWall.x && 
-        thisPeasant.x < (thisWall.x + thisWall.theWidth) &&
-        thisPeasant.y + thisPeasant.theHeight > thisWall.y && 
-        thisPeasant.y < thisWall.y +thisWall.theHeight) {
-        thisPeasant.x -= 5;
+      if (thisFarm.isInside(thisPeasant)) {    
+        //time between each harvest
+        if (frameCount % 120 == 0) {
+          food += 10;
+        }
       }
     }
   }

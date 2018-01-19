@@ -1,4 +1,5 @@
 class Archer extends Units {
+
   int damage;
   boolean attacking;
   
